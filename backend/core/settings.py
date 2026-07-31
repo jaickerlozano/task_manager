@@ -140,6 +140,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 # Solo si el JWT viaja en Cookies de forma automática
 CORS_ALLOW_CREDENTIALS = True
 
+# Configuración de Django REST Framework
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -156,8 +157,13 @@ REST_FRAMEWORK = {
 
     # Enable filtering by default using django-filter
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    # Pagination settings for Django REST Framework
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }
 
+# Configuración de drf-spectacular
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Your Project API',
     'DESCRIPTION': 'Your project description',
