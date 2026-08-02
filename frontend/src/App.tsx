@@ -1,29 +1,10 @@
-import { useState, useEffect } from 'react'
-import { getTasks, addTask } from './api/api'
-import type { Task } from './api/api'
+import { useState } from 'react'
 import { TaskModal } from './components/TaskModal'
+import { useTasks } from './hooks/useTasks'
 
 function App() {
   const [showModal, setShowModal] = useState(false)
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      setLoading(true)
-      try {
-        const tasksData = await getTasks()
-        setTasks(tasksData)
-      } catch (error) {
-        setError('Error al obtener las tareas')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchTasks()
-  }, [])
+  const { tasks, loading, error, handleAddTask } = useTasks()
 
   return (
     <>
@@ -49,24 +30,13 @@ function App() {
             )}
           </ul>
           <button 
-            className='bg-blue-500 text-white p-2 rounded m-2 hover:bg-blue-600 hover:cursor-pointer'
-            onClick={() => setShowModal(true)}
+            className='bg-blue-500 text-white p-2 rounded m-2 hover:bg-blue-600 hover:cursor-pointer' 
+            onClick={() => setShowModal(true)} 
             type='button'
-          >
-            Agregar Tarea
+          > 
+            Agregar Tarea 
           </button>
-          <TaskModal 
-            isOpen={showModal} 
-            onClose={() => setShowModal(false)}
-            onAddTask={async (title, description) => {
-              try {
-                const newTask = await addTask(title, description);
-                setTasks((prevTasks) => [...prevTasks, newTask]);
-              } catch (error) {
-                setError('Error al agregar la tarea');
-              }
-            }}
-          />
+          <TaskModal isOpen={showModal} onClose={() => setShowModal(false)} onAddTask={handleAddTask} />
           <button className='bg-red-500 text-white p-2 rounded m-2 hover:bg-red-600 hover:cursor-pointer'>Eliminar Tarea</button>
           <button className='bg-green-500 text-white p-2 rounded m-2 hover:bg-green-600 hover:cursor-pointer'>Editar Tarea</button>
         </main>

@@ -1,0 +1,40 @@
+import { useState, useEffect } from 'react'
+import { getTasks, addTask } from '../api/api'
+import type { Task } from '../api/api'
+
+export function useTasks() {
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      setLoading(true)
+      try {
+        const tasksData = await getTasks()
+        setTasks(tasksData)
+      } catch (err) {
+        setError('Error al obtener las tareas')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTasks()
+  }, [])
+
+  const handleAddTask = async (title: string, description: string) => {
+    try {
+      const newTask = await addTask(title, description)
+      setTasks((prevTasks) => [...prevTasks, newTask])
+    } catch (err) {
+      setError('Error al agregar la tarea')
+    }
+  }
+
+  return {
+    tasks,
+    loading,
+    error,
+    handleAddTask,
+  }
+}
