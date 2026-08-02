@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getTasks } from './api/api'
+import { getTasks, addTask } from './api/api'
 import type { Task } from './api/api'
 import { TaskModal } from './components/TaskModal'
 
@@ -58,8 +58,13 @@ function App() {
           <TaskModal 
             isOpen={showModal} 
             onClose={() => setShowModal(false)}
-            onAddTask={(title, description) => {
-              // Lógica para agregar tarea
+            onAddTask={async (title, description) => {
+              try {
+                const newTask = await addTask(title, description);
+                setTasks((prevTasks) => [...prevTasks, newTask]);
+              } catch (error) {
+                setError('Error al agregar la tarea');
+              }
             }}
           />
           <button className='bg-red-500 text-white p-2 rounded m-2 hover:bg-red-600 hover:cursor-pointer'>Eliminar Tarea</button>
