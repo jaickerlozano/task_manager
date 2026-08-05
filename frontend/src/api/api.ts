@@ -46,3 +46,21 @@ export async function deleteTask(id: number): Promise<void> {
         throw new Error('Error al eliminar la tarea');
     }
 }
+
+// Función para actualizar una tarea en el backend
+export async function updateTask(id: number, title: string, description: string): Promise<Task> {
+    const response = await fetch(`http://localhost:8000/api/tasks/${id}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al actualizar la tarea');
+    }
+
+    const data: Task = await response.json();
+    return data;
+}

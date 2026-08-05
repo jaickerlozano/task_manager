@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getTasks, addTask, deleteTask } from '../api/api'
+import { getTasks, addTask, deleteTask, updateTask } from '../api/api'
 import type { Task } from '../api/api'
 
 export interface UseTasksReturn {
@@ -8,6 +8,7 @@ export interface UseTasksReturn {
   error: string | null
   handleAddTask: (title: string, description: string) => Promise<void>
   handleDeleteTask: (id: number) => Promise<void>
+  handleUpdateTask: (id: number, title: string, description: string) => Promise<void>
 }
 
 export function useTasks(): UseTasksReturn {
@@ -48,11 +49,21 @@ export function useTasks(): UseTasksReturn {
     }
   }
 
+  const handleUpdateTask = async (id: number, title: string, description: string) => {
+    try {
+      const updatedTask = await updateTask(id, title, description)
+      setTasks((prevTasks) => prevTasks.map((task) => (task.id === id ? updatedTask : task)))
+    } catch (err) {
+      setError('Error al actualizar la tarea')
+    }
+  }
+
   return {
     tasks,
     loading,
     error,
     handleAddTask,
-    handleDeleteTask
+    handleDeleteTask,
+    handleUpdateTask,
   }
 }

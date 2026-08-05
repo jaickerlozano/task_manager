@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { TaskModal, TaskModalDelete } from './components/TaskModal';
+import { TaskModal, TaskModalDelete, TaskModalUpdate } from './components/TaskModal';
 import { useTasks } from './hooks/useTasks';
 import { Plus, Trash, Pencil } from 'lucide-react';
 
 function App() {
   const [showModal, setShowModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showUpdateModal, setShowUpdateModal] = useState(false)
   const [taskIdToDelete, setTaskIdToDelete] = useState<number | null>(null)
-  const { tasks, loading, error, handleAddTask, handleDeleteTask } = useTasks()
+  const [taskIdToUpdate, setTaskIdToUpdate] = useState<number | null>(null)
+  const { tasks, loading, error, handleAddTask, handleDeleteTask, handleUpdateTask } = useTasks()
 
   return (
     <>
@@ -32,6 +34,12 @@ function App() {
               onDeleteTask={handleDeleteTask} 
               taskId={taskIdToDelete} 
             />
+            <TaskModalUpdate 
+              isOpen={showUpdateModal} 
+              onClose={() => setShowUpdateModal(false)} 
+              onUpdateTask={handleUpdateTask} 
+              taskId={taskIdToUpdate} 
+            />
           </div>
           {loading && <p>Cargando...</p>}
           {error && <p>{error}</p>}
@@ -51,7 +59,13 @@ function App() {
                       >
                         <Trash className='w-4 h-4' />
                       </button>
-                      <button className='bg-green-300 text-black p-0.5 rounded m-2 hover:bg-green-600 hover:cursor-pointer hover:text-white'>
+                      <button 
+                        className='bg-green-300 text-black p-0.5 rounded m-2 hover:bg-green-600 hover:cursor-pointer hover:text-white'
+                        onClick={() => {
+                          setTaskIdToUpdate(task.id);
+                          setShowUpdateModal(true);
+                        }}
+                      >
                         <Pencil className='w-4 h-4' />
                       </button>
                     </div>
