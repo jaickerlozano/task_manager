@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getTasks, addTask } from '../api/api'
+import { getTasks, addTask, deleteTask } from '../api/api'
 import type { Task } from '../api/api'
 
 export interface UseTasksReturn {
@@ -7,6 +7,7 @@ export interface UseTasksReturn {
   loading: boolean
   error: string | null
   handleAddTask: (title: string, description: string) => Promise<void>
+  handleDeleteTask: (id: number) => Promise<void>
 }
 
 export function useTasks(): UseTasksReturn {
@@ -38,10 +39,20 @@ export function useTasks(): UseTasksReturn {
     }
   }
 
+  const handleDeleteTask = async (id: number) => {
+    try {
+      await deleteTask(id)
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
+    } catch (err) {
+      setError('Error al eliminar la tarea')
+    }
+  }
+
   return {
     tasks,
     loading,
     error,
     handleAddTask,
+    handleDeleteTask
   }
 }

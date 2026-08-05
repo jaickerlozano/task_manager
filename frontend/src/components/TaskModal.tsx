@@ -6,6 +6,13 @@ interface TaskModalProps {
   onAddTask: (taskTitle: string, taskDescription: string) => void;
 }
 
+interface TaskModalDeleteProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDeleteTask: (taskId: number) => void;
+  taskId: number;
+}
+
 export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onAddTask }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -68,6 +75,40 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onAddTask
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  )
+}
+
+export const TaskModalDelete: React.FC<TaskModalDeleteProps> = ({ isOpen, onClose, onDeleteTask, taskId }) => {
+  if (!isOpen) return null;
+
+  const handleDelete = () => {
+    onDeleteTask(taskId);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded shadow-lg w-96">
+        <h2 className="text-xl font-bold mb-4">Eliminar Tarea</h2>
+        <p className="mb-4">¿Está seguro de que desea eliminar esta tarea?</p>
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Eliminar
+          </button>
+        </div>
       </div>
     </div>
   )

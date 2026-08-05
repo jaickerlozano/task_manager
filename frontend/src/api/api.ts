@@ -35,3 +35,14 @@ export async function addTask(title: string, description: string): Promise<Task>
     const data: Task = await response.json();
     return data;
 }
+
+// Función para eliminar una tarea del backend
+export async function deleteTask(id: number): Promise<void> {
+    const response = await fetch(`http://localhost:8000/api/tasks/${id}/`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al eliminar la tarea');
+    }
+}

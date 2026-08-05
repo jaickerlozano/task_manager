@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { TaskModal } from './components/TaskModal';
+import { TaskModal, TaskModalDelete } from './components/TaskModal';
 import { useTasks } from './hooks/useTasks';
 import { Plus, Trash, Pencil } from 'lucide-react';
 
 function App() {
   const [showModal, setShowModal] = useState(false)
-  const { tasks, loading, error, handleAddTask } = useTasks()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [taskIdToDelete, setTaskIdToDelete] = useState<number | null>(null)
+  const { tasks, loading, error, handleAddTask, handleDeleteTask } = useTasks()
 
   return (
     <>
@@ -24,6 +26,12 @@ function App() {
               <Plus className='w-4 h-4' />
             </button>
             <TaskModal isOpen={showModal} onClose={() => setShowModal(false)} onAddTask={handleAddTask} />
+            <TaskModalDelete 
+              isOpen={showDeleteModal} 
+              onClose={() => setShowDeleteModal(false)} 
+              onDeleteTask={handleDeleteTask} 
+              taskId={taskIdToDelete} 
+            />
           </div>
           {loading && <p>Cargando...</p>}
           {error && <p>{error}</p>}
@@ -34,7 +42,13 @@ function App() {
                   <div className='flex items-center justify-between'>
                     <h3 className='text-xl font-bold'>{task.title}</h3>
                     <div>
-                      <button className='bg-red-300 text-black p-0.5 rounded m-2 hover:bg-red-600 hover:cursor-pointer hover:text-white'>
+                      <button 
+                        className='bg-red-300 text-black p-0.5 rounded m-2 hover:bg-red-600 hover:cursor-pointer hover:text-white'
+                        onClick={() => {
+                          setTaskIdToDelete(task.id);
+                          setShowDeleteModal(true);
+                        }}
+                      >
                         <Trash className='w-4 h-4' />
                       </button>
                       <button className='bg-green-300 text-black p-0.5 rounded m-2 hover:bg-green-600 hover:cursor-pointer hover:text-white'>
