@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react'
 import { getTasks, addTask } from '../api/api'
 import type { Task } from '../api/api'
 
-export function useTasks() {
+export interface UseTasksReturn {
+  tasks: Task[]
+  loading: boolean
+  error: string | null
+  handleAddTask: (title: string, description: string) => Promise<void>
+}
+
+export function useTasks(): UseTasksReturn {
   const [tasks, setTasks] = useState<Task[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
