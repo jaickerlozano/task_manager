@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { TaskModal, TaskModalDelete, TaskModalUpdate } from './components/TaskModal';
+import { TaskChecked } from './components/TaskChecked';
 import { useTasks } from './hooks/useTasks';
 import { Plus, Trash, Pencil } from 'lucide-react';
 
 function App() {
-  const [showModal, setShowModal] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [showUpdateModal, setShowUpdateModal] = useState(false)
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false)
   const [taskIdToDelete, setTaskIdToDelete] = useState<number | null>(null)
   const [taskIdToUpdate, setTaskIdToUpdate] = useState<number | null>(null)
-  const { tasks, loading, error, handleAddTask, handleDeleteTask, handleUpdateTask } = useTasks()
+  const { tasks, loading, error, handleAddTask, handleDeleteTask, handleUpdateTask, handleCompleteTask } = useTasks()
 
+  // const handleTaskCompleted = (e: boolean) => {
+  //   return setIsCompleted(e)
+  // }
   return (
     <>
       <div className='p-4'>
@@ -72,7 +76,21 @@ function App() {
                   </div>
                   <div>
                     <p className='text-gray-600'>{task.description}</p>
-                    <p className='text-gray-600'>Completada: {task.completed ? 'Sí' : 'No'}</p>
+                    {/* <form action="">
+                      <label className='text-gray-600'>
+                        <input 
+                          type="checkbox" 
+                          onChange={(e) => handleTaskCompleted(e.target.checked)} 
+                          checked={isCompleted} />
+                        {' '}
+                        {isCompleted ? ('Completada') : ('Sin completar')}
+                      </label>
+                    </form> */}
+                    <TaskChecked 
+                      taskId={task.id}
+                      taskCompleted={task.completed}
+                      onHandleCompleteTask={handleCompleteTask}
+                    />
                   </div>
                 </li>
               ))
@@ -80,7 +98,6 @@ function App() {
               !loading && !error && <p>No se pudieron cargar las tareas correctamente.</p>
             )}
           </ul>
-
         </main>
         <footer>
           <p>Este será el footer</p>
