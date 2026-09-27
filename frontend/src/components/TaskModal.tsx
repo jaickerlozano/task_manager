@@ -151,7 +151,7 @@ export const TaskModalUpdate: React.FC<TaskModalUpdateProps> = ({ isOpen, onClos
             <input
               type="text"
               id="taskTitle"
-              value={taskTitle}
+              defaultValue={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
@@ -162,7 +162,7 @@ export const TaskModalUpdate: React.FC<TaskModalUpdateProps> = ({ isOpen, onClos
             </label>
             <textarea
               id="taskDescription"
-              value={taskDescription}
+              defaultValue={taskDescription}
               onChange={(e) => setTaskDescription(e.target.value)}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
