@@ -6,9 +6,11 @@ export interface Task {
     completed:boolean;
 }
 
+const url: string = 'http://localhost:8000/api/tasks'
+
 // Función para obtener las tareas desde el backend
 export async function getTasks(): Promise<Task[]> {
-    const response = await fetch('http://localhost:8000/api/tasks');
+    const response = await fetch(url);
 
     if (!response.ok) {
         throw new Error('Error al obtener las tareas');
@@ -20,7 +22,7 @@ export async function getTasks(): Promise<Task[]> {
 
 // Función para agregar una nueva tarea al backend
 export async function addTask(title: string, description: string): Promise<Task> {
-    const response = await fetch('http://localhost:8000/api/tasks/', {
+    const response = await fetch(`${url}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ export async function addTask(title: string, description: string): Promise<Task>
 
 // Función para eliminar una tarea del backend
 export async function deleteTask(id: number): Promise<void> {
-    const response = await fetch(`http://localhost:8000/api/tasks/${id}/`, {
+    const response = await fetch(`${url}/${id}/`, {
         method: 'DELETE',
     });
 
@@ -49,18 +51,39 @@ export async function deleteTask(id: number): Promise<void> {
 
 // Función para actualizar una tarea en el backend
 export async function updateTask(id: number, title: string, description: string): Promise<Task> {
-    const response = await fetch(`http://localhost:8000/api/tasks/${id}/`, {
+    const response = await fetch(`${url}/${id}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description}),
     });
 
     if (!response.ok) {
         throw new Error('Error al actualizar la tarea');
     }
 
+    console.log(response)
     const data: Task = await response.json();
+    console.log(data)
+    return data;
+}
+
+// Función para completar tarea
+export async function completeTask(id:number, completed: boolean): Promise<Task> {
+    const response = await fetch(`${url}/${id}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({completed}),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al actualizar la tarea')
+    }
+
+    const data: Task = await response.json();
+    console.log(data)
     return data;
 }
